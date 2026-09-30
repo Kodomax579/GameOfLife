@@ -1,0 +1,15 @@
+Zyklische Ränder (Torus-Topologie): Ränder per Modulo verbinden, damit Gleiter nicht an der Wand sterben und die if-Verzweigungen in isAlive entfallen.
+
+Vorab-Allokation des Ausgabepuffers: Dem strings.Builder bzw. Byte-Buffer mit Grow() vorab die exakte Bytezahl zuweisen, um Reallokationen während des Zeichnens auf null zu senken.
+
+Reduktion der Nachbar-Funktionsaufrufe: Statt 8 Einzelaufrufen von isAlive eine kompakte relative Schleife (dx, dy von -1 bis +1) oder vorberechnete 1D-Index-Offsets nutzen.
+
+Parallelisierung mit Goroutinen: Das Spielfeld in horizontale Zeilen-Streifen aufteilen und parallel über sync.WaitGroup auf mehrere CPU-Kerne verteilen (besonders bei großen Feldern wirksam).
+
+Bit-Packing / Bitboards: 64 Zellen in ein einzelnes uint64 packen und Nachbarn über Bitshifts und logische Gatter (AND, OR, XOR) parallel berechnen.
+
+Muster-Initialisierung (Presets): Neben reinem Zufall klassische Strukturen (Glider, Pulsar, Gosper Glider Gun) aus Dateien oder Koordinaten-Arrays laden.
+
+Live-Telemetrie: Generationen-Zähler, Anzahl lebender Zellen und Berechnungszeit pro Frame (time.Since()) unter dem Spielfeld anzeigen.
+
+Konfigurierbare Parameter: Steuerbare Taktfrequenz, Feldgröße und Startdichte über CLI-Flags (flag-Paket) beim Programmstart.

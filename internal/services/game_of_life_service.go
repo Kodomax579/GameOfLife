@@ -1,28 +1,20 @@
 package services
 
-func Rules(currentPixels [][]bool, width int, height int) [][]bool {
-	//Create new Board
-	newBoard := make([][]bool, width)
-	for x := range newBoard {
-		newBoard[x] = make([]bool, height)
+func Rules(currentPixels []bool, width int, height int, tmpBoard []bool) {
+
+	for i, pixel := range currentPixels {
+
+		tmpBoard[i] = pixelRules(pixel, currentPixels, i%width, i/width, width)
 	}
-	for x, pixelX := range currentPixels {
-		for y, pixelY := range pixelX {
-			newBoard[x][y] = pixelRules(pixelY, currentPixels, y, x)
-		}
-	}
-	return newBoard
 }
 
-func pixelRules(pixel bool, currentPixels [][]bool, y int, x int) bool {
+func pixelRules(pixel bool, currentPixels []bool, x int, y int, width int) bool {
 	if pixel == false {
-		if getAliveNeighbors(currentPixels, y, x) == 3 {
+		if getAliveNeighbors(currentPixels, x, y, width) == 3 {
 			return true
 		}
-	}
-	if pixel == true {
-
-		aliveNeighbors := getAliveNeighbors(currentPixels, y, x)
+	} else {
+		aliveNeighbors := getAliveNeighbors(currentPixels, x, y, width)
 		if aliveNeighbors == 2 || aliveNeighbors == 3 {
 			return true
 		}
@@ -30,40 +22,43 @@ func pixelRules(pixel bool, currentPixels [][]bool, y int, x int) bool {
 	return false
 }
 
-func getAliveNeighbors(currentPixels [][]bool, y int, x int) int {
+func getAliveNeighbors(currentPixels []bool, x int, y int, width int) int {
 	//number of neighbors
 	counter := 0
 
-	if isAlive(currentPixels, x+1, y) {
+	if isAlive(currentPixels, y+1, x, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x+1, y-1) {
+	if isAlive(currentPixels, y+1, x-1, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x+1, y+1) {
+	if isAlive(currentPixels, y+1, x+1, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x, y+1) {
+	if isAlive(currentPixels, y, x+1, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x, y-1) {
+	if isAlive(currentPixels, y, x-1, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x-1, y) {
+	if isAlive(currentPixels, y-1, x, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x-1, y+1) {
+	if isAlive(currentPixels, y-1, x+1, width) {
 		counter++
 	}
-	if isAlive(currentPixels, x-1, y-1) {
+	if isAlive(currentPixels, y-1, x-1, width) {
 		counter++
 	}
 	return counter
 }
 
-func isAlive(board [][]bool, x int, y int) bool {
-	if x < 0 || x >= len(board) || y < 0 || y >= len(board[0]) {
+func isAlive(board []bool, y int, x int, width int) bool {
+	if x < 0 || x >= width || 0 > y || y >= (len(board)/width) {
 		return false
 	}
-	return board[x][y]
+
+	index := y*width + x
+
+	return board[index]
 }

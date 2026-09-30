@@ -5,20 +5,26 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
-func PrintMenu(pixels [][]bool) {
+func PrintMenu(pixels []bool, width int) {
 	clearScreen()
-	for _, pixelX := range pixels {
-		for _, pixelY := range pixelX {
-			if pixelY == true {
-				fmt.Print("██")
-			} else {
-				fmt.Print("  ")
-			}
+
+	var displayBoard strings.Builder
+
+	for i, pixel := range pixels {
+
+		if i%width == 0 {
+			displayBoard.WriteString("\n")
 		}
-		fmt.Println()
+		if pixel == true {
+			displayBoard.WriteString("██")
+		} else {
+			displayBoard.WriteString("  ")
+		}
 	}
+	fmt.Print(displayBoard.String())
 }
 
 func clearScreen() {
